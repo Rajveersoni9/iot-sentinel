@@ -184,8 +184,11 @@ void SubnetScanner::processPortScanning() {
     dev.open_ports.clear();
     addLog("INFO", "Port scanning disabled or no ports enabled for: " + dev.ip);
   } else {
-    std::vector<int> openPorts = PortScanner::scanDevicePorts(dev.ip, targetPorts);
+    IPAddress deviceIp;
+    deviceIp.fromString(dev.ip);
+    std::vector<int> openPorts = PortScanner::scanDevicePorts(deviceIp, targetPorts);
     dev.open_ports = openPorts;
+
     
     String portsStr = "";
     if (openPorts.empty()) {
