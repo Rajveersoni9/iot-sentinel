@@ -789,4 +789,32 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupEventListeners();
     loadSettings(); // Load initial settings (and starts polling)
+
+    // Sidebar drawer toggle on mobile
+    const btnToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (btnToggle && sidebar) {
+        btnToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('open');
+        });
+        
+        // Close sidebar when clicking on a nav item
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+        
+        // Close sidebar when clicking anywhere else
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && e.target !== btnToggle) {
+                sidebar.classList.remove('open');
+            }
+        });
+    }
 });
+

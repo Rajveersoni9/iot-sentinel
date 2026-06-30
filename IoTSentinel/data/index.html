@@ -65,8 +65,18 @@
         <main class="main-content">
             <!-- Header Panel -->
             <header class="top-bar">
-                <h1 id="page-title">Security Dashboard</h1>
+                <div class="top-bar-left">
+                    <button id="sidebar-toggle" class="btn btn-mini btn-outline mobile-only" aria-label="Toggle Navigation Menu">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <h1 id="page-title">Security Dashboard</h1>
+                </div>
                 <div class="scan-pill-container">
+
                     <div id="scan-indicator" class="scan-pill idle">
                         <span class="pulse-dot"></span>
                         <span id="scan-status-text">System Idle</span>

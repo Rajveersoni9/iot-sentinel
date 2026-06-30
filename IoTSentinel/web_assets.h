@@ -73,8 +73,18 @@ const char INDEX_HTML[] PROGMEM = R"rawhtml(<!DOCTYPE html>
         <main class="main-content">
             <!-- Header Panel -->
             <header class="top-bar">
-                <h1 id="page-title">Security Dashboard</h1>
+                <div class="top-bar-left">
+                    <button id="sidebar-toggle" class="btn btn-mini btn-outline mobile-only" aria-label="Toggle Navigation Menu">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <h1 id="page-title">Security Dashboard</h1>
+                </div>
                 <div class="scan-pill-container">
+
                     <div id="scan-indicator" class="scan-pill idle">
                         <span class="pulse-dot"></span>
                         <span id="scan-status-text">System Idle</span>
@@ -1689,6 +1699,119 @@ body.light-theme .form-group select {
     background-color: #f8fafc;
 }
 
+/* Header and Menu Toggle Layout */
+.top-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-only {
+    display: none !important;
+}
+
+/* Responsive Media Queries */
+@media screen and (max-width: 1024px) {
+    .dashboard-mid-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .mobile-only {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: var(--radius-md);
+    }
+    
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform var(--transition-normal);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .top-bar {
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+    }
+    
+    .top-bar h1 {
+        font-size: 1.4rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+    }
+    
+    .stat-card {
+        padding: 16px;
+    }
+    
+    .chart-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 24px;
+    }
+    
+    .chart-legend {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .settings-grid-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .export-actions {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
+    
+    .export-actions .btn {
+        flex: 1;
+    }
+}
+
+
 )rawcss";
 
 // ==========================================
@@ -2485,7 +2608,35 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupEventListeners();
     loadSettings(); // Load initial settings (and starts polling)
+
+    // Sidebar drawer toggle on mobile
+    const btnToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (btnToggle && sidebar) {
+        btnToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('open');
+        });
+        
+        // Close sidebar when clicking on a nav item
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+        
+        // Close sidebar when clicking anywhere else
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && e.target !== btnToggle) {
+                sidebar.classList.remove('open');
+            }
+        });
+    }
 });
+
 )rawjs";
 
 #endif
