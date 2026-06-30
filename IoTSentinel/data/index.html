@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Sentinel - ESP32 Network Security Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>IoT Sentinel</h2>
+                    <span>Network Auditor</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-item active" id="btn-dash">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                    Dashboard
+                </a>
+                <a href="#scanner" class="nav-item" id="btn-scan">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+                    Scan Subnet
+                </a>
+                <a href="#logs" class="nav-item" id="btn-logs">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2M20 2v20"/></svg>
+                    Live Logs
+                </a>
+                <a href="#encyclopedia" class="nav-item" id="btn-ency">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Mitigation Info
+                </a>
+                <a href="#settings" class="nav-item" id="btn-settings">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="system-status">
+                <div class="status-row">
+                    <span class="label">IP Address:</span>
+                    <span class="value" id="status-ip">Connecting...</span>
+                </div>
+                <div class="status-row">
+                    <span class="label">SSID:</span>
+                    <span class="value" id="status-ssid">...</span>
+                </div>
+                <div class="status-row">
+                    <span class="label">RAM Free:</span>
+                    <span class="value" id="status-ram">-- KB</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Panel -->
+            <header class="top-bar">
+                <h1 id="page-title">Security Dashboard</h1>
+                <div class="scan-pill-container">
+                    <div id="scan-indicator" class="scan-pill idle">
+                        <span class="pulse-dot"></span>
+                        <span id="scan-status-text">System Idle</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tab Content: Dashboard -->
+            <section id="tab-dashboard" class="tab-pane active">
+                <!-- Stat Cards Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card border-glow-blue">
+                        <div class="card-icon blue-bg">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <h3>Security Grade</h3>
+                            <h2 id="metric-grade">A</h2>
+                            <p id="metric-grade-sub">All clear</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card border-glow-green">
+                        <div class="card-icon green-bg">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <h3>Hosts Online</h3>
+                            <h2 id="metric-hosts">0</h2>
+                            <p>Active devices</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card border-glow-red">
+                        <div class="card-icon red-bg">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <h3>Critical Threats</h3>
+                            <h2 id="metric-critical" class="threat-glow">0</h2>
+                            <p>Open Telnet/FTP</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card border-glow-amber">
+                        <div class="card-icon amber-bg">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <h3>Medium Risks</h3>
+                            <h2 id="metric-medium">0</h2>
+                            <p>Exposed Web panels</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mid Section: Chart and Progress -->
+                <div class="dashboard-mid-row">
+                    <div class="chart-container glass">
+                        <div class="chart-header">
+                            <h3>Network Security Mix</h3>
+                        </div>
+                        <div class="chart-content">
+                            <!-- Pure SVG Pie Chart and legend -->
+                            <div class="svg-chart-wrapper">
+                                <svg width="160" height="160" viewBox="0 0 36 36" class="donut-chart">
+                                    <circle class="donut-ring" cx="18" cy="18" r="15.915" fill="transparent" stroke="#151b2d" stroke-width="3"></circle>
+                                    <circle id="donut-segment-low" class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#38ef7d" stroke-width="3" stroke-dasharray="100 0" stroke-dashoffset="25"></circle>
+                                    <circle id="donut-segment-med" class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#ff9900" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"></circle>
+                                    <circle id="donut-segment-high" class="donut-segment" cx="18" cy="18" r="15.915" fill="transparent" stroke="#ff3366" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"></circle>
+                                    <g class="chart-text">
+                                        <text x="50%" y="50%" class="chart-number" id="chart-pct">100%</text>
+                                        <text x="50%" y="62%" class="chart-label">Secure</text>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item"><span class="dot green-dot"></span> Low Risk</div>
+                                <div class="legend-item"><span class="dot amber-dot"></span> Medium Risk</div>
+                                <div class="legend-item"><span class="dot red-dot"></span> High Threat</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-control glass">
+                        <h3>Subnet Audit Progress</h3>
+                        <div class="progress-details">
+                            <div class="progress-info-row">
+                                <span id="progress-ip">Target: Not scanning</span>
+                                <span id="progress-percent">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" id="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="btn-start-scan" class="btn btn-primary glow-button">
+                                <span class="spinner-icon hidden" id="scan-spinner"></span>
+                                Trigger Subnet Scan
+                            </button>
+                            <button id="btn-stop-scan" class="btn btn-danger glow-button-red hidden">
+                                Stop Scan
+                            </button>
+                            <button id="btn-clear-scan" class="btn btn-secondary">Clear Results</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Table -->
+                <div class="table-container glass">
+                    <div class="table-header">
+                        <h3>Audited Devices</h3>
+                        <div class="header-actions">
+                            <div class="table-filter">
+                                <span class="active-filter" id="filter-all">All (<span id="count-all">0</span>)</span>
+                                <span id="filter-high">Threats (<span id="count-high">0</span>)</span>
+                            </div>
+                            <div class="export-actions">
+                                <button id="btn-export-json" class="btn btn-mini btn-outline">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export JSON
+                                </button>
+                                <button id="btn-export-csv" class="btn btn-mini btn-outline">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="responsive-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Fingerprint / Node Type</th>
+                                    <th>Open Ports</th>
+                                    <th>Risk Assessment</th>
+                                    <th>Score / RTT</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="device-table-body">
+                                <tr>
+                                    <td colspan="6" class="table-empty">No device data available. Perform a subnet scan to discover active nodes.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Active Subnet Scan Control -->
+            <section id="tab-scanner" class="tab-pane">
+                <div class="glass scanner-panel">
+                    <h2>Subnet Network Scanner</h2>
+                    <p class="description">
+                        This module probes IP addresses in your local subnet (derived from the ESP32's current IP and subnet mask). 
+                        It establishes ultra-fast TCP connections to identify live hosts and audit active vulnerabilities.
+                    </p>
+
+                    <div class="scan-settings">
+                        <div class="settings-card">
+                            <h3>Subnet Details</h3>
+                            <div class="details-list">
+                                <div class="detail-item">
+                                    <span>Subnet Mask:</span>
+                                    <strong id="scan-submask">Connecting...</strong>
+                                </div>
+                                <div class="detail-item">
+                                    <span>IP Range:</span>
+                                    <strong id="scan-iprange">Calculating...</strong>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Current Scope:</span>
+                                    <strong>254 IP addresses (Class C)</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Audited Ports</h3>
+                            <div class="ports-tag-list">
+                                <span class="port-tag critical">Port 21 (FTP)</span>
+                                <span class="port-tag warning">Port 22 (SSH)</span>
+                                <span class="port-tag critical">Port 23 (Telnet)</span>
+                                <span class="port-tag info">Port 53 (DNS)</span>
+                                <span class="port-tag warning">Port 80 (HTTP)</span>
+                                <span class="port-tag info">Port 443 (HTTPS)</span>
+                                <span class="port-tag warning">Port 1883 (MQTT)</span>
+                                <span class="port-tag info">Port 8080 (HTTP-Alt)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scanner-actions">
+                        <button id="btn-big-scan" class="btn btn-primary btn-large glow-button-blue">
+                            Run Subnet Security Audit
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Live Logs Console -->
+            <section id="tab-logs" class="tab-pane">
+                <div class="terminal-container glass">
+                    <div class="terminal-header">
+                        <div class="window-buttons">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="terminal-title">audit_scanner_log.txt</div>
+                        <button class="btn btn-mini" id="btn-clear-logs">Clear Logs</button>
+                    </div>
+                    <div class="terminal-body" id="log-console">
+                        <div class="log-line text-muted">[SYSTEM] Welcome to IoT Sentinel terminal console. Logs will display below in real-time.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Mitigation Info -->
+            <section id="tab-encyclopedia" class="tab-pane">
+                <div class="encyclopedia-grid">
+                    <div class="ency-card glass">
+                        <div class="ency-header critical-border">
+                            <span class="risk-badge red-bg">CRITICAL THREAT</span>
+                            <h3>Telnet Protocol (Port 23) Exposed</h3>
+                        </div>
+                        <p class="ency-desc">
+                            Telnet transmits all sessions (including user logins and administrative passwords) in plaintext. An attacker on the same local network can intercept this traffic using ARP poisoning or passive sniffing to obtain full credentials.
+                        </p>
+                        <div class="ency-mitigation">
+                            <strong>Remediation:</strong> Immediately disable Telnet in the device configuration pages and substitute it with secure SSH communication (Port 22) which enforces end-to-end encryption.
+                        </div>
+                    </div>
+
+                    <div class="ency-card glass">
+                        <div class="ency-header critical-border">
+                            <span class="risk-badge red-bg">CRITICAL THREAT</span>
+                            <h3>FTP Server (Port 21) Enabled</h3>
+                        </div>
+                        <p class="ency-desc">
+                            File Transfer Protocol (FTP) lacks security encryption. Session handshake parameters, usernames, keys, and transferred documents are sent in raw ASCII text, making them completely vulnerable to MITM (Man-in-the-Middle) sniffing.
+                        </p>
+                        <div class="ency-mitigation">
+                            <strong>Remediation:</strong> Switch to SFTP (Secure FTP over SSH) or secure cloud transmission. If FTP is required for legacy nodes, implement strict IP address filters (ACLs).
+                        </div>
+                    </div>
+
+                    <div class="ency-card glass">
+                        <div class="ency-header warning-border">
+                            <span class="risk-badge amber-bg">MEDIUM RISK</span>
+                            <h3>HTTP Server (Port 80) Unsecured</h3>
+                        </div>
+                        <p class="ency-desc">
+                            HTTP lacks transport layer protection. Administrators logging into configuration portals are vulnerable to session sniffing. Many older smart switches and IoT sensors expose unauthenticated root terminals over Port 80.
+                        </p>
+                        <div class="ency-mitigation">
+                            <strong>Remediation:</strong> Enable HTTPS (Port 443) and force SSL redirects. Enforce robust, non-default credentials for all admin accounts.
+                        </div>
+                    </div>
+
+                    <div class="ency-card glass">
+                        <div class="ency-header warning-border">
+                            <span class="risk-badge amber-bg">MEDIUM RISK</span>
+                            <h3>MQTT Broker (Port 1883) Exposed</h3>
+                        </div>
+                        <p class="ency-desc">
+                            Message Queuing Telemetry Transport (MQTT) is the backbone of IoT communication. Port 1883 hosts unencrypted MQTT transmissions. If left open without login checks, anyone on the LAN can subscribe to topic directories and read/control IoT states.
+                        </p>
+                        <div class="ency-mitigation">
+                            <strong>Remediation:</strong> Enforce MQTT client authentication and shift traffic to port 8883 (MQTT over TLS) to encrypt sensor streams.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Settings & Configuration -->
+            <section id="tab-settings" class="tab-pane">
+                <div class="glass settings-panel">
+                    <h2>Sentinel Control Configuration</h2>
+                    <p class="description">
+                        Manage NVS parameters of the security audit scanner, adjust execution timing constraints, and set dashboard preferences.
+                    </p>
+                    
+                    <form id="settings-form" class="settings-grid-form">
+                        <div class="settings-card">
+                            <h3>Scan Engine Parameters</h3>
+                            <div class="form-group">
+                                <label for="setting-timeout">Port Scan Timeout (ms)</label>
+                                <input type="number" id="setting-timeout" min="10" max="1000" value="120" required>
+                                <span class="help-text">Socket timeout for connection probes. Lower is faster but may miss ports on slow networks.</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="setting-delay">Scan Delay between Hosts (ms)</label>
+                                <input type="number" id="setting-delay" min="0" max="5000" value="0">
+                                <span class="help-text">Time delay between successive device audits. Keeps CPU temperature low and prevents router flooding.</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="setting-maxdev">Maximum Devices to Record</label>
+                                <input type="number" id="setting-maxdev" min="5" max="250" value="50">
+                                <span class="help-text">Caps discovered device array size to protect ESP32 memory bounds.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Audited TCP Ports</h3>
+                            <div class="ports-checkbox-list">
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-0" checked> Port 21 (FTP)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-1" checked> Port 22 (SSH)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-2" checked> Port 23 (Telnet)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-3" checked> Port 53 (DNS)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-4" checked> Port 80 (HTTP)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-5" checked> Port 443 (HTTPS)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-6" checked> Port 1883 (MQTT)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="port-chk-7" checked> Port 8080 (HTTP-Alt)</label>
+                            </div>
+                            <span class="help-text">Select ports to scan on active hosts. Disabling unused ports speeds up scanning.</span>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>UI and Visual Preferences</h3>
+                            <div class="form-group">
+                                <label for="setting-theme">Dashboard Color Theme</label>
+                                <select id="setting-theme">
+                                    <option value="dark">Cybernetic Dark Mode</option>
+                                    <option value="light">High-Contrast Light Mode</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="toggle-container">
+                                    <input type="checkbox" id="setting-refresh" checked>
+                                    <span class="toggle-slider"></span>
+                                    Enable Real-time AJAX Polling
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Wi-Fi Network Reconfiguration</h3>
+                            <div class="form-group">
+                                <label for="setting-ssid">SSID (Network Name)</label>
+                                <input type="text" id="setting-ssid" placeholder="Enter network SSID name">
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-pass">SSID Password</label>
+                                <input type="password" id="setting-pass" placeholder="Enter security passphrase">
+                                <span class="help-text">SSID and password updates are stored directly in Wi-Fi memory, connecting upon reboot/reconnect.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-actions">
+                            <button type="submit" class="btn btn-primary glow-button-blue" id="btn-save-settings">Save Configurations</button>
+                            <span id="save-status-msg" class="status-msg"></span>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Device Audit Modal Detail -->
+    <div id="audit-modal" class="modal-overlay hidden">
+        <div class="modal glass">
+            <div class="modal-header">
+                <h2>Vulnerability Analysis Report</h2>
+                <button class="close-btn" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-content">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
