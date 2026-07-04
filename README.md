@@ -20,7 +20,8 @@ Discover • Assess • Visualize
 ## Dashboard
 
 <p align="center">
-<img src="assets/dashboard.png" width="100%">
+<img src="<img width="1902" height="980" alt="Screenshot 2026-07-02 213552" src="https://github.com/user-attachments/assets/311ee4bb-8da2-4dc9-a9c3-ab7cd7e40400" />
+" width="100%">
 </p>
 
 > Modern real-time dashboard hosted directly on the ESP32, providing live device discovery, service enumeration, risk assessment, and scan statistics.
