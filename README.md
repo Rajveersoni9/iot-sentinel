@@ -17,14 +17,16 @@ A lightweight embedded cybersecurity platform for discovering devices, assessing
 
 ## Dashboard
 
-![Dashboard](assets/dashboard.png)
+![Dashboard](assets/<img width="1902" height="980" alt="Screenshot 2026-07-02 213552" src="https://github.com/user-attachments/assets/b5f440ef-7c07-44bb-b326-6494bdad0a27" />
+)
 
 ---
 
 ## Hardware Prototype
 
 <p align="center">
-<img src="assets/hardware.jpg" width="75%">
+<img src="assets/<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/d9ac137e-e459-4b57-bb9a-d744cf0becbb" />
+" width="75%">
 </p>
 
 ---
@@ -95,7 +97,7 @@ This project is intended for **educational and defensive security purposes only*
 
 <div align="center">
 
-Made with ❤️ by **Rajveer Soni**
+Made by **Rajveer Soni**
 
 ⭐ Star this repository if you found it useful.
 
