@@ -17,7 +17,7 @@ A lightweight embedded cybersecurity platform for discovering devices, assessing
 
 ## Dashboard
 
-![Dashboard](assets/<img width="1902" height="980" alt="Screenshot 2026-07-02 213552" src="https://github.com/user-attachments/assets/b5f440ef-7c07-44bb-b326-6494bdad0a27" />
+![Dashboard](<img width="1902" height="980" alt="Screenshot 2026-07-02 213552" src="https://github.com/user-attachments/assets/b5f440ef-7c07-44bb-b326-6494bdad0a27" />
 )
 
 ---
@@ -25,7 +25,7 @@ A lightweight embedded cybersecurity platform for discovering devices, assessing
 ## Hardware Prototype
 
 <p align="center">
-<img src="assets/<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/d9ac137e-e459-4b57-bb9a-d744cf0becbb" />
+<img src="<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/d9ac137e-e459-4b57-bb9a-d744cf0becbb" />
 " width="75%">
 </p>
 
