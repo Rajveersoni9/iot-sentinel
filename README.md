@@ -4,12 +4,14 @@
 
 ### ESP32-Based Local Network Security Assessment Platform
 
-A lightweight embedded cybersecurity platform for discovering devices, assessing exposed services, and visualizing network security through a real-time dashboard.
+Discover • Assess • Visualize
 
-![ESP32](https://img.shields.io/badge/ESP32-WROOM32-blue?style=flat-square)
-![Arduino](https://img.shields.io/badge/Arduino-IDE-00979D?style=flat-square)
-![C++](https://img.shields.io/badge/C++-17-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-success?style=flat-square)
+<p>
+<img src="https://img.shields.io/badge/ESP32-WROOM32-000?style=for-the-badge&logo=espressif">
+<img src="https://img.shields.io/badge/Arduino-C++-00979D?style=for-the-badge&logo=arduino">
+<img src="https://img.shields.io/badge/HTML-CSS-JS-E34F26?style=for-the-badge">
+<img src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge">
+</p>
 
 </div>
 
@@ -17,40 +19,61 @@ A lightweight embedded cybersecurity platform for discovering devices, assessing
 
 ## Dashboard
 
-![Dashboard](<img width="1902" height="980" alt="Screenshot 2026-07-02 213552" src="https://github.com/user-attachments/assets/b5f440ef-7c07-44bb-b326-6494bdad0a27" />
-)
+<p align="center">
+<img src="assets/dashboard.png" width="100%">
+</p>
+
+> Modern real-time dashboard hosted directly on the ESP32, providing live device discovery, service enumeration, risk assessment, and scan statistics.
 
 ---
 
 ## Hardware Prototype
 
 <p align="center">
-<img src="<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/d9ac137e-e459-4b57-bb9a-d744cf0becbb" />
-" width="75%">
+<img src="assets/hardware.jpg" width="75%">
 </p>
+
+> ESP32 DevKit V1 running the IoT Sentinel firmware and hosting the embedded web dashboard.
+
+---
+
+## Overview
+
+IoT Sentinel is a lightweight **embedded network security assessment platform** built on the ESP32.
+
+It discovers devices on a local network, performs lightweight TCP service enumeration, evaluates the security posture using a rule-based engine, and visualizes the results through a modern web dashboard.
 
 ---
 
 ## Features
 
-- 🌐 Local Network Discovery
-- 🔍 TCP Port Scanning
-- 🛡️ Rule-Based Risk Assessment
-- 📊 Interactive Web Dashboard
-- 📈 Live Scan Progress
-- 📋 Device Inventory
-- 📄 JSON & CSV Export
-- ⚡ Lightweight ESP32 Implementation
+| | |
+|:--|:--|
+| 🌐 | Local Network Discovery |
+| 🔍 | TCP Port Scanning |
+| 🛡️ | Rule-Based Risk Analysis |
+| 📊 | Interactive Dashboard |
+| 📈 | Live Scan Progress |
+| 📄 | JSON / CSV Report Export |
+| ⚡ | Optimized for ESP32 |
+
+---
+
+## Architecture
+
+<p align="center">
+<img src="assets/architecture.png" width="100%">
+</p>
 
 ---
 
 ## Tech Stack
 
-| Hardware | Backend | Frontend |
-|----------|---------|----------|
-| ESP32 DevKit V1 | Arduino C++ | HTML, CSS, JavaScript |
-| Wi-Fi | WebServer | AJAX |
-| TCP/IP | ArduinoJson | Chart.js |
+<p align="center">
+
+ESP32 • Arduino IDE • C++ • Wi-Fi • TCP/IP • HTML • CSS • JavaScript • Chart.js • ArduinoJson
+
+</p>
 
 ---
 
@@ -58,47 +81,40 @@ A lightweight embedded cybersecurity platform for discovering devices, assessing
 
 ```text
 IoT-Sentinel/
+│
+├── assets/
 ├── src/
 ├── data/
-├── assets/
 ├── docs/
-└── README.md
+│
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-## Workflow
+## Roadmap
 
-```text
-ESP32
-   │
-Connect Wi-Fi
-   │
-Start Web Server
-   │
-User Starts Scan
-   │
-Network Discovery
-   │
-Port Scanning
-   │
-Risk Assessment
-   │
-Dashboard
-```
+- ✅ Dashboard
+- ✅ Network Discovery
+- ✅ Port Scanner
+- ✅ Risk Assessment
+- ✅ Report Export
 
 ---
 
 ## Disclaimer
 
-This project is intended for **educational and defensive security purposes only**. It performs lightweight local network assessment and does not exploit vulnerabilities or perform penetration testing.
+This project is intended for **educational and defensive security purposes only**.
+
+It performs lightweight local network assessment and does not exploit vulnerabilities or perform offensive security operations.
 
 ---
 
 <div align="center">
 
-Made by **Rajveer Soni**
+Developed by **Rajveer Soni**
 
-⭐ Star this repository if you found it useful.
+⭐ Star the repository if you found it useful.
 
 </div>
